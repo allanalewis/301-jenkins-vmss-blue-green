@@ -1,4 +1,3 @@
-#!/bin/bash
 
 function print_usage() {
   cat <<EOF
@@ -45,13 +44,14 @@ function run_util_script() {
 
 function install_az() {
   if !(command -v az >/dev/null); then
-    sudo apt-get -y update
-    sudo apt-get install -y apt-transport-https lsb-release software-properties-common dirmngr -y
-    AZ_REPO=$(lsb_release -cs)
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-    sudo apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv --keyserver packages.microsoft.com --recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF
-    sudo apt-get -y update && sudo apt-get install -y azure-cli
-  fi
+	sudo apt-get update -y
+	sudo apt-get install apt-transport-https lsb-release software-properties-common dirmngr -y
+	AZ_REPO=$(lsb_release -cs)
+	echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+	sudo apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv --keyserver packages.microsoft.com --recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF
+	sudo apt-get update -y
+	sudo apt-get install azure-cli
+ fi
 }
 
 service_name=tomcat
