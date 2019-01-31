@@ -51,6 +51,7 @@ function install_az() {
 	sudo apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv --keyserver packages.microsoft.com --recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF
 	sudo apt-get update -y
 	sudo apt-get install azure-cli
+	git clone https://github.com/allanalewis/301-jenkins-vmss-blue-green.git ~/301-jenkins-vmss-blue-green
  fi
 }
 
@@ -142,7 +143,7 @@ if [[ -z "$location" ]]; then
 fi
 
 if [[ -n "$image_name" ]]; then
-  run_util_script "quickstart_templates/zero_downtime_deployment/vmss/packer-build-tomcat-image.sh" \
+  run_util_script "~/301-jenkins-vmss-blue-green/quickstart_templates/zero_downtime_deployment/vmss/packer-build-tomcat-image.sh" \
     --app_id "$app_id" \
     --app_key "$app_key" \
     --subscription_id "$subscription_id" \
@@ -164,17 +165,17 @@ fi
 az logout
 
 #install jenkins
-run_util_script "solution_template/scripts/install_jenkins.sh" \
+run_util_script "~/301-jenkins-vmss-blue-green/solution_template/scripts/install_jenkins.sh" \
   --jenkins_release_type verified \
   --jenkins_version_location "${artifacts_location}/quickstart_templates/shared/verified-jenkins-version${artifacts_location_sas_token}" \
   --jenkins_fqdn "${jenkins_fqdn}" \
   --artifacts_location "${artifacts_location}/solution_template" \
   --sas_token "${artifacts_location_sas_token}"
 
-run_util_script "solution_template/scripts/run-cli-command.sh" -c "install-plugin ssh-agent -deploy"
-run_util_script "solution_template/scripts/run-cli-command.sh" -c "install-plugin azure-vmss -deploy"
+run_util_script "~/301-jenkins-vmss-blue-green/solution_template/scripts/run-cli-command.sh" -c "install-plugin ssh-agent -deploy"
+run_util_script "~/301-jenkins-vmss-blue-green/solution_template/scripts/run-cli-command.sh" -c "install-plugin azure-vmss -deploy"
 
-run_util_script "quickstart_templates/zero_downtime_deployment/vmss/add-jenkins-jobs.sh" \
+run_util_script "~/301-jenkins-vmss-blue-green/quickstart_templates/zero_downtime_deployment/vmss/add-jenkins-jobs.sh" \
     -j "http://localhost:8080/" \
     -ju "admin" \
     --resource_group "$resource_group" \
