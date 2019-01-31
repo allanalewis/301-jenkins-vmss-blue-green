@@ -279,10 +279,13 @@ fi
 #install jenkins
 if [[ ${jenkins_release_type} == 'verified' ]]; then
   jenkins_version=$(curl --silent "${jenkins_version_location}")
+  echo "installing jenkins now... ${jenkins_release_type}"
+  echo "jenkins version is... ${jenkins_version}"
+
   if [ -z "$jenkins_version" ]; then
     jenkins_version=${jenkins_fallback_version}
   fi
-  deb_file=jenkins_${jenkins_version}_all.deb
+  deb_file="jenkins_2.150.2_all.deb"
   wget -q "https://pkg.jenkins.io/debian-stable/binary/${deb_file}"
   if [[ -f ${deb_file} ]]; then
     sudo dpkg -i ${deb_file}
