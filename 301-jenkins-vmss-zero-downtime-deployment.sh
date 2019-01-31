@@ -34,6 +34,7 @@ function throw_if_empty() {
 function run_util_script() {
   local script_path="$1"
   shift
+  
   curl --silent "${artifacts_location}/${script_path}${artifacts_location_sas_token}" | sudo bash -s -- "$@"
   local return_value=$?
   if [ $return_value -ne 0 ]; then
@@ -164,6 +165,8 @@ fi
 az logout
 
 #install jenkins
+echo "installing jenkins values are $artifacts_location, $jenkins_fqdn"
+
 run_util_script "solution_template/scripts/install_jenkins.sh" \
   --jenkins_release_type verified \
   --jenkins_version_location "${artifacts_location}/quickstart_templates/shared/verified-jenkins-version${artifacts_location_sas_token}" \
